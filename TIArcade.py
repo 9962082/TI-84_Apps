@@ -17,7 +17,7 @@ def loading(secs):
 #startup screen that only runs when app is opened
 def startup():
     start = str(input("Welcome to the TI Arcade! \n Press ENTER to start!\n\n\n\n\nTI Arcade v1.0\nBuild 2026.01"))
-    if start != "":
+    if start == "":
         loading(5)
         clear()
 
@@ -67,38 +67,39 @@ def game_selector():
 #in future implement algorithm so computer hits strategicly
 def blackjack():
     while True:
-        print("welcome to blackjack! \n press ANY KEY to start")
-        for i in range(3):
-            print()
-        total = 0
-        starting_card_1 = random.randint(1, 12)
-        starting_card_2 = random.randint(1,12)
-        print("You are dealt a ", starting_card_1, " and a ", starting_card_2, ".")
-        while total <= 21:
-            hit = str(input("would you like to hit or stay?(y/n): "))
-            print()
+        print("welcome to blackjack! \n press ANY KEY to start\n\n\n")
+        player_total = random.randint(1, 12) + random.randint(1, 12)
+        print(f"You are dealt a total of {player_total}.")
+        
+        while player_total <= 21:
+            hit = input("would you like to hit?(y/n): ").strip().lower()
             if hit == "y":
-                new_card = random.randint(1,12)
-                print("you are dealt a ", new_card)
-                total += new_card
+                new_card = random.randint(1, 12)
+                player_total += new_card
+                print(f"you are dealt a {new_card}. Total: {player_total}\n")
             elif hit == "n":
                 break
             else:
-                print("invalid response")
-        computer_total = random.randint(12,24)
-        print("TI-84 ends with a ", computer_total)
-        if computer_total > 21 and total <= 21 :
-            print("The TI-84 busts. You win!")
-        elif total  and computer_total >= 21:
+                print("invalid response\n")
+        
+        computer_total = random.randint(12, 24)
+        print(f"TI-84 ends with a {computer_total}")
+        
+        # Determine winner
+        if player_total > 21 and computer_total > 21:
+            print("Both bust! It's a tie!")
+        elif player_total > 21:
             print("you bust. TI-84 wins!")
-        elif computer_total > total:
+        elif computer_total > 21:
+            print("The TI-84 busts. You win!")
+        elif player_total > computer_total:
+            print("you win!")
+        elif computer_total > player_total:
             print("TI-84 got closer than you to 21. It wins!")
         else:
-            print("you win!")
-        continue_blackjack = str(input("New match?(y/n): "))
-        if continue_blackjack == "y":
-            continue
-        if continue_blackjack =="n":
+            print("It's a tie!")
+        
+        if input("New match?(y/n): ").strip().lower() != "y":
             break
 
 #hangman game
