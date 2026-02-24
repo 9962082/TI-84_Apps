@@ -13,7 +13,7 @@ def startUp():
     return gameMode
 
 def hangman(isComputer):
-    wordList = ["python", "java", "hangman", "programming", "computer", "science", "mathematics", "algorithm", "function", "variable", "algebra", "mitosis"]
+    wordList = ["python", "java", "hangman", "programming", "computer", "science", "mathematics", "guitar", "running", "variable", "biology", "mitosis", "playstation", "nintendo", "school", "book", "library", "coffee", "tea", "water", "bottle", "phone", "keyboard", "mouse", "monitor", "desk", "chair", "window", "door", "car", "bicycle", "airplane"]
     clear()
     if isComputer:
         correctWord = random.choice(wordList)
