@@ -7,7 +7,7 @@
 
 class Character:
     # constructor
-    def __init__(self, name, max_hp, attack, defense, speed):
+    def __init__(self, name, max_hp, attack, defense, speed, max_heals):
         self.name = name
 
         # core stats
@@ -19,6 +19,19 @@ class Character:
 
         # Temporary stats
         self.is_defending = False
-        self.heals_left = 3
+        self.heals_left = max_heals
     
-    def attack_opponent(self, character):
+    def attack_opponent(self, opponent):
+        damage = character.attack
+        if opponent.is_defending:
+            damage //= character.defense
+        opponent.hp -= damage
+
+    def defend(self):
+        self.is_defending = True
+
+    def heal(self):
+        if self.heals_left > 0:
+            heal_amount = self.max_hp // 4
+            self.hp = min(self.hp + heal_amount, self.max_hp)
+            self.heals_left -= 1
