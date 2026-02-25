@@ -4,7 +4,7 @@
 #  
 #   This is my attempt at object-oriented programming in python, and I am still learning, so the code may not be perfect. 
 # I am open to feedback and suggestions for improvement.
-
+import random
 class Character:
     # constructor
     def __init__(self, name, max_hp, attack, defense, speed, max_heals):
@@ -24,7 +24,7 @@ class Character:
     def attack_opponent(self, opponent):
         damage = character.attack
         if opponent.is_defending:
-            damage //= character.defense
+            damage * 1-character.defense
         opponent.hp -= damage
 
     def defend(self):
@@ -35,3 +35,84 @@ class Character:
             heal_amount = self.max_hp // 4
             self.hp = min(self.hp + heal_amount, self.max_hp)
             self.heals_left -= 1
+
+class Battle:
+    def __init__(self, player, computer):
+        self.player = player
+        self.computer = computer
+    
+    def player_turn(self):
+        print(f"your HP: {self.player.hp}/{self.player.max_hp} | Computer HP: {self.computer.hp}/{self.computer.max_hp}\nHeals left: {self.player.heals_left}")
+        print("Choose your action:\n1. Attack\n2. Defend\n3. Heal")
+        action = input("Enter the number of your action: ").strip()
+        
+        if action == "1":
+            self.player.attack_opponent(self.computer)
+            print("You attack the computer!")
+        elif action == "2":
+            self.player.defend()
+            print("You defend!")
+        elif action == "3":
+            self.player.heal()
+            print("You heal!")
+        else:
+            print("Invalid action. Please try again.")
+            self.player_turn()
+    
+    def computer_turn(self):
+        if self.computer.hp <= self.computer.max_hp // 4 and self.computer.heals_left > 0:
+            choices = ["attack", "attack", "attack", "defend", "defend", "defend", "heal", "heal","heal", "heal"]
+        elif self.computer.hp <= self.computer.max_hp // 4:
+            choices = ["attack", "attack", "attack", "defend", "defend",  "defend", "defend", "defend", "defend", "defend"]
+        else:
+            choices = ["attack", "attack", "attack", "attack", "defend", "defend", "defend", "heal","heal", "heal"]
+        action = random.choice(choices)
+        if action == "attack":
+            self.computer.attack_opponent(self.player)
+            print("The computer attacks you!")
+        elif action == "defend":
+            self.computer.defend()
+            print("The computer defends!")
+        else:
+            self.computer.heal()
+            print("The computer heals!")
+
+def clear():
+    for i in range(10):
+        print()
+
+def choose_hero(hero_choice):
+    if hero_choice == "1":
+        player = Character("Warrior", 100, 20, 0.5, 10, 1)
+    elif hero_choice == "2":
+        player = Character("Goblin", 80, 15, 0.3, 20, 3)
+    elif hero_choice == "3":
+        player = Character("Wizard", 60, 25, 0.2, 15, 5)
+    else:
+        print("Invalid choice. Defaulting to Warrior.")
+        player = Character("Warrior", 100, 20, 0.5, 10, 1)
+    return player
+    
+def main():
+    print("Welcome to pocket protocol!\n\n in this game, you will battle against the computer in a turn-based strategy game. \nYou can choose to attack, defend, or heal on your turn, while the computer will randomly choose one of these actions.\nThe game continues until either you or the computer's health reaches zero.\n\nPress any key to start!")
+    clear()
+    print("Please choose your hero:\n1. Warrior\n2. goblin \n3. Wizard")
+
+    hero_choice = input("Enter the number of your hero: ").strip()
+    player = choose_hero(hero_choice)
+    battle = Battle(player, choose_hero(random.choice(["1", "2", "3"])))
+    
+    while player.hp > 0 and battle.computer.hp > 0:
+        battle.player_turn()
+        if battle.computer.hp <= 0:
+            print("You win!")
+            break
+        battle.computer_turn()
+        if player.hp <= 0:
+            print("You lose!")
+            break
+while True:
+    main()
+    again = input("Play again? (y/n): ").strip().lower()
+    if again != 'y':
+        break
