@@ -5,6 +5,7 @@
 #   This is my attempt at object-oriented programming in python, and I am still learning, so the code may not be perfect. 
 # I am open to feedback and suggestions for improvement.
 import random
+import time
 class Character:
     # constructor
     def __init__(self, name, max_hp, attack, defense, speed, max_heals):
@@ -22,9 +23,9 @@ class Character:
         self.heals_left = max_heals
     
     def attack_opponent(self, opponent):
-        damage = character.attack
+        damage = self.attack
         if opponent.is_defending:
-            damage * 1-character.defense
+            damage = damage * (1 - opponent.defense)
         opponent.hp -= damage
 
     def defend(self):
@@ -42,7 +43,7 @@ class Battle:
         self.computer = computer
     
     def player_turn(self):
-        print(f"your HP: {self.player.hp}/{self.player.max_hp} | Computer HP: {self.computer.hp}/{self.computer.max_hp}\nHeals left: {self.player.heals_left}")
+        print("your HP: {}/{} | Computer HP: {}/{}\nHeals left: {}\n".format(self.player.hp, self.player.max_hp, self.computer.hp, self.computer.max_hp, self.player.heals_left))
         print("Choose your action:\n1. Attack\n2. Defend\n3. Heal")
         action = input("Enter the number of your action: ").strip()
         
@@ -73,9 +74,12 @@ class Battle:
         elif action == "defend":
             self.computer.defend()
             print("The computer defends!")
-        else:
+        elif action == "heal" and self.computer.heals_left > 0:
             self.computer.heal()
             print("The computer heals!")
+        else:
+            self.computer.attack_opponent(self.player)
+            print("The computer attacks you!")
 
 def clear():
     for i in range(10):
@@ -94,7 +98,8 @@ def choose_hero(hero_choice):
     return player
     
 def main():
-    print("Welcome to pocket protocol!\n\n in this game, you will battle against the computer in a turn-based strategy game. \nYou can choose to attack, defend, or heal on your turn, while the computer will randomly choose one of these actions.\nThe game continues until either you or the computer's health reaches zero.\n\nPress any key to start!")
+    print("Welcome to pocket protocol!\n\n in this game, you will battle against the computer in a turn-based strategy game. \nYou can choose to attack, defend, or heal on your turn, while the computer will randomly choose one of these actions.\nThe game continues until either you or the computer's health reaches zero.")
+    time.sleep(15)
     clear()
     print("Please choose your hero:\n1. Warrior\n2. goblin \n3. Wizard")
 
@@ -104,10 +109,12 @@ def main():
     
     while player.hp > 0 and battle.computer.hp > 0:
         battle.player_turn()
+        clear()
         if battle.computer.hp <= 0:
             print("You win!")
             break
         battle.computer_turn()
+        clear()
         if player.hp <= 0:
             print("You lose!")
             break
